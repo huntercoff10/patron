@@ -38,7 +38,7 @@ let pendingMediaAction = null; // To store action if user tries to interact whil
 // ------------------ HARDCODED EMBEDDED DATA ------------------
 // Link your local storage files in the 'src' parameter here.
 let mediaData = [
-    { id: 'm1', type: 'img', title: 'Plastic pollution', src: 'https://drive.google.com/file/d/1HOr9sMHBGzIPFq8LYyEszF5YCyDxWEnl/view?usp=drivesdk', locked: true },
+    { id: 'm1', type: 'img', title: 'Plastic pollution', src: 'https://kommodo.ai/i/s6RpiOyZD51RJzEBOksY', locked: true },
     { id: 'm2', type: 'img', title: 'Plastic pollution', src: 'https://drive.google.com/file/d/1P_5NJgHVccF1GeK4ipvUwyLZ7I1UR7H0/view?usp=drivesdk', locked: true },
     { id: 'm3', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1tofMEKUDHxqAF3yVGKV9I2a1t7hj_KF1/view?usp=drivesdk',locked: true },
     { id: 'm5', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1xUyXU2hjZDI_PYHYl05Qr0Odrsm1jSPD/view?usp=drivesdk',locked: true },
