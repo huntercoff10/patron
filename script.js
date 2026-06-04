@@ -38,13 +38,18 @@ let pendingMediaAction = null; // To store action if user tries to interact whil
 // ------------------ HARDCODED EMBEDDED DATA ------------------
 // Link your local storage files in the 'src' parameter here.
 let mediaData = [
-    { id: 'm1', type: 'img', title: 'Plastic pollution', src: '1.jpg', locked: true },
-    { id: 'm2', type: 'img', title: 'Plastic pollution', src: '1.jpg', locked: true },
-    { id: 'm3', type: 'img', title: 'Plastic pollution ', src: '1.jpg',locked: true },
-    { id: 'm5', type: 'img', title: 'Plastic pollution ', src: '1.jpg',locked: true },
-    { id: 'm7', type: 'imag', title: 'Plastic pollution', src: '1.jpg',locked: true },
-    { id: 'm8', type: 'img', title: 'Plastic pollution ', src: '1.jpg',locked: true },
-    { id: 'm9', type: 'vid', title: 'Plastic pollution ', src: '2.mp4',locked: false },
+    { id: 'm1', type: 'img', title: 'Plastic pollution', src: 'https://drive.google.com/file/d/1HOr9sMHBGzIPFq8LYyEszF5YCyDxWEnl/view?usp=drivesdk', locked: true },
+    { id: 'm2', type: 'img', title: 'Plastic pollution', src: 'https://drive.google.com/file/d/1P_5NJgHVccF1GeK4ipvUwyLZ7I1UR7H0/view?usp=drivesdk', locked: true },
+    { id: 'm3', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1tofMEKUDHxqAF3yVGKV9I2a1t7hj_KF1/view?usp=drivesdk',locked: true },
+    { id: 'm5', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1xUyXU2hjZDI_PYHYl05Qr0Odrsm1jSPD/view?usp=drivesdk',locked: true },
+    { id: 'm7', type: 'imag', title: 'Plastic pollution', src: 'https://drive.google.com/file/d/1phSd_AH3U4BnyBZjgb33FIQKzaABz8l1/view?usp=drivesdk',locked: true },
+    { id: 'm8', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1BEsiw3vpBfQ780dWKQ8UP_cLglgG5rUq/view?usp=drivesdk',locked: true },
+    { id: 'm10', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1XRGlLlbxmbpnbvEUXK_rGvX2Ru5zrhTg/view?usp=drivesdk',locked: true },
+    { id: 'm11', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1h1pzKSICBaXptZxyOZuO06bKRACZDSAk/view?usp=drivesdk',locked: true },
+    { id: 'm12', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1FThdNJTsTbwRni2l6q5DMqHZ6x3amiIM/view?usp=drivesdk',locked: true },
+    { id: 'm13', type: 'img', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1ItoMLm5cknWVF7m-bwVbRJcYiFQPUeam/view?usp=drivesdk',locked: true },
+    { id: 'm9', type: 'vid', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1lj3-m4BZOn1ZmqAtXYhyEkkWSnm7ZJTp/view?usp=drivesdk',locked: true },
+    { id: 'm14', type: 'vid', title: 'Plastic pollution ', src: 'https://drive.google.com/file/d/1lj3-m4BZOn1ZmqAtXYhyEkkWSnm7ZJTp/view?usp=drivesdk',locked: true },
     { id: 'm6', type: 'oth', title: 'Plastic pollution', src: 'Previous.html', locked: false}
 ];
 
