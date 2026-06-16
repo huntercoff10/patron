@@ -219,7 +219,7 @@
                         
                         <div class="space-y-4 relative z-10">
                             <div class="flex justify-between items-end font-mono">
-                                <span class="text-slate-200 text-sm font-bold">Initial Phase: START</span>
+                                <span class="text-slate-200 text-sm font-bold"><a href="https://youtube.com">Initial Phase: START</a></span>
                                 <span class="text-emerald-400 font-black text-2xl neon-glow">1%</span>
                             </div>
                             <div class="w-full h-4 bg-slate-950 border border-slate-800 rounded-full overflow-hidden shadow-inner relative">
@@ -240,7 +240,7 @@
                     <button onclick="switchMediaFilter('oth')" id="flt-media-oth" class="text-slate-400 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-emerald-300 transition-all">Others</button>
                 </div>
                 
-                <p class="text-[10px] text-slate-500 font-mono text-center px-4">Files are strictly bound to local/server storage parameters. Embedded via source arrays. Admin clearance required to bypass locks.</p>
+                <p class="text-[10px] text-slate-500 font-mono text-center px-4">Files are strictly bound to local/server storage parameters. Admin clearance required to bypass locks.</p>
 
                 <div id="mediaGrid" class="grid grid-cols-2 gap-3"></div>
             </div>
@@ -256,7 +256,7 @@
                 <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl relative overflow-hidden mt-8">
                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-teal-500/5 z-0 pointer-events-none"></div>
                     <div class="relative z-10 flex items-center justify-between mb-4">
-                        <h3 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">Secure Comms Relay</h3>
+                        <h3 class="text-xs font-mono uppercase tracking-widest text-teal-400 font-bold">Message us</h3>
                         <button onclick="changeRelayEmail()" id="editRelayBtn" class="hidden text-slate-400 hover:text-teal-300 text-[9px] font-mono uppercase bg-slate-950 px-2 py-1 rounded border border-slate-800">Edit Routing</button>
                     </div>
                     
@@ -266,7 +266,7 @@
                             <input type="text" id="targetEmailDisplay" readonly class="w-full bg-slate-950/50 border border-slate-800 rounded-lg p-2 text-xs font-mono text-emerald-400 focus:outline-none" value="patron@outlook.com">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-mono uppercase text-slate-500 mb-1">Message Payload</label>
+                            <label class="block text-[10px] font-mono uppercase text-slate-500 mb-1">Message</label>
                             <textarea id="commsMsg" required rows="4" class="w-full bg-slate-950/80 border border-slate-700 focus:border-emerald-500 transition-colors p-3 text-xs rounded-lg text-slate-200 resize-none placeholder:text-slate-600" placeholder="Enter message parameters..."></textarea>
                         </div>
                         
