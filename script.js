@@ -40,6 +40,9 @@ let pendingMediaAction = null; // To store action if user tries to interact whil
 let mediaData = [
     { id: 'm1', type: 'img', title: 'Plastic pollution', src: '1.jpg', locked: true },
     { id: 'm15', type: 'img', title: 'Plastic pollution', src: '11.jpg', locked: true },
+    { id: 'm16', type: 'img', title: 'Plastic pollution', src: '12.jpg', locked: true },
+    { id: 'm17', type: 'img', title: 'Plastic pollution', src: '13.jpg', locked: true },
+    { id: 'm18', type: 'img', title: 'Plastic pollution', src: '14.jpg', locked: true },
     { id: 'm2', type: 'img', title: 'Plastic pollution', src: '9.jpg', locked: true },
     { id: 'm3', type: 'img', title: 'Plastic pollution ', src: '2.jpg' , locked: true },
     { id: 'm5', type: 'img', title: 'Plastic pollution ', src: '10.jpg', locked: true },
