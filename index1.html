@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patrons - for a better tomorrow</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base styling & scrollbar */
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #f3f4f6; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { 
+            width: 4px; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+            background: rgba(22, 163, 74, 0.4); 
+            border-radius: 4px; 
+        }
+
+        /* Accordion Transitions */
+        .slab-content { 
+            max-height: 70px; 
+            overflow: hidden; 
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%); 
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+        .dark {
+            text-decoration:none
+        }
+
+        .slab-content.expanded { 
+            max-height: 800px; 
+            mask-image: none; 
+            -webkit-mask-image: none;
+        }
+
+        /* Home Curtain Transition */
+        #homeCurtain { 
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); 
+        }
+
+        .curtain-up { 
+            transform: translateY(-100%); 
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-sans antialiased selection:bg-green-200 flex justify-center items-center h-[100dvh] w-screen bg-gray-100">
+    
+    <main class="relative w-full h-full max-w-md bg-white overflow-hidden border-x border-gray-200 shadow-xl flex flex-col relative">
+        
+        <section id="homeCurtain" class="absolute inset-0 z-50 bg-white/95 backdrop-blur-md flex flex-col justify-center items-center p-8 overflow-y-auto custom-scrollbar">
+            <div class="relative flex flex-col items-center text-center space-y-6 z-10 w-full">
+                <div class="relative p-6 bg-green-50 rounded-full border border-green-200 shadow-sm">
+                    <i data-lucide="lightbulb" class="w-16 h-16 text-green-600"></i>
+                </div>
+                
+                <a class="dark" href="index.html">
+                  <h1 class="text-5xl font-black tracking-tighter text-green-700 uppercase">
+                    Patrons
+                  </h1>
+                </a>
+                
+                <h2 class="text-xl font-bold text-gray-800 px-2 leading-snug">
+                    "Turning a problem into the solution for many problems"
+                </h2>
+                
+                <p class="text-sm text-gray-600 mt-4 leading-relaxed">
+                    Imagine a world where nothing is thrown away, only reinvented. We collect your waste and give it a second life: turning plastics into local fuel and organic scraps into thriving farms. Give us your waste today, and let's fuel our community together.
+                </p>
+
+                <button onclick="toggleCurtain(true)" class="mt-8 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center space-x-3 shadow-md transition-all active:scale-95 group">
+                    <span class="tracking-widest text-sm uppercase">Know More</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </section>
+
+        <header id="appHeader" class="bg-white/90 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex justify-between items-center z-40 sticky top-0 hidden">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="lightbulb" class="w-5 h-5 text-green-600"></i>
+                <span class="font-black text-sm tracking-widest text-gray-900 uppercase">Patrons</span>
+            </div>
+            <button onclick="triggerAdminLogin()" id="adminBadge" class="flex items-center space-x-1.5 bg-gray-50 border border-gray-200 rounded-full px-3 py-1 text-[10px] font-mono tracking-wider text-gray-500 transition-colors hover:bg-gray-100">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-400" id="adminIndicator"></span>
+                <span id="adminText">USER</span>
+            </button>
+        </header>
+
+        <div id="coreViewport" class="flex-1 overflow-y-auto custom-scrollbar p-5 pb-24 hidden relative z-30">
+            
+            <div id="view-report" class="space-y-6">
+                <div class="grid grid-cols-3 gap-2 bg-gray-100 p-1.5 rounded-xl border border-gray-200">
+                    <button onclick="switchReportTab('overview')" id="btn-report-overview" class="bg-white text-green-600 shadow-sm border border-gray-200 text-[11px] font-mono py-2 rounded-lg font-bold uppercase transition-all">Overview</button>
+                    <button onclick="switchReportTab('explanations')" id="btn-report-explanations" class="text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all">Explanations</button>
+                    <button onclick="switchReportTab('milestones')" id="btn-report-milestones" class="text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all">Milestones</button>
+                </div>
+
+                <div id="tab-overview" class="space-y-5">
+                    <div class="text-center mb-4"><span class="text-green-700 font-mono tracking-widest text-xs uppercase bg-green-50 px-3 py-1 rounded-full border border-green-200">Basic Summary</span></div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-green-600"></i> Your Waste, Returned as Value</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                We’re rewriting the rules of trash. By transforming your daily waste into clean eco-fuel, rich bio-fertilizers, and green farming kits, we don’t just clean up neighborhoods—we fuel them. Join the zero-waste movement and watch your footprint turn into fuel for a greener tomorrow.
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="infinity" class="w-4 h-4 text-blue-600"></i> The End of Waste</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                Imagine a world where nothing is thrown away, only reinvented. We collect your waste and give it a second life: turning plastics into local fuel and organic scraps into thriving farms. Give us your waste today, and let's fuel our community together.
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="battery-charging" class="w-4 h-4 text-orange-500"></i> Nothing Wasted</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                We collect your everyday waste and return it to your community as clean energy, organic bio-fertilizers, and home agricultural kits. No landfills. No pollution. Just a flawless, sustainable loop. Ready to power the cycle?
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center mt-6 shadow-sm">
+                        <span class="text-[10px] font-mono uppercase tracking-widest text-gray-500 block mb-4">Closed-Loop Vector</span>
+                        <div class="flex items-center justify-between px-1">
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="trash" class="w-6 h-6 text-gray-500 mb-2"></i><span class="text-[9px] font-mono font-bold text-gray-700">Collect Waste</span></div>
+                            <i data-lucide="chevrons-right" class="w-4 h-4 text-gray-400"></i>
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="cpu" class="w-6 h-6 text-blue-500 mb-2"></i><span class="text-[9px] font-mono font-bold text-gray-700">Process</span></div>
+                            <i data-lucide="chevrons-right" class="w-4 h-4 text-gray-400"></i>
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="package-check" class="w-6 h-6 text-green-600 mb-2"></i><span class="text-[9px] font-mono font-bold text-green-700">Return as Value</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-explanations" class="space-y-5 hidden">
+                    <div class="bg-red-50 border border-red-100 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-red-700 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i> Problems Observed</h4>
+                            <div class="slab-content text-xs text-red-900 leading-relaxed font-mono">
+                                1. Plastic pollution<br>2. Organic waste management issues<br>3. Dependency for food<br>4. Public health impacts<br>5. Inefficiency of human resource<br>6. Unemployment<br>7. Decline of agricultural field<br>8. Farmer's misery
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-red-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center shadow-sm">
+                        <div class="flex items-center justify-between px-1">
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="trash" class="w-6 h-6 text-gray-500 mb-2"></i><span class="text-[9px] font-mono font-bold text-gray-700">Collect Waste</span></div>
+                            <i data-lucide="chevrons-right" class="w-4 h-4 text-gray-400"></i>
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="cpu" class="w-6 h-6 text-blue-500 mb-2"></i><span class="text-[9px] font-mono font-bold text-gray-700">Process</span></div>
+                            <i data-lucide="chevrons-right" class="w-4 h-4 text-gray-400"></i>
+                            <div class="flex flex-col items-center flex-1"><i data-lucide="package-check" class="w-6 h-6 text-green-600 mb-2"></i><span class="text-[9px] font-mono font-bold text-green-700">Return to User</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                        <table class="w-full text-left text-[10px] font-mono">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-700 border-b border-gray-200">
+                                    <th class="p-2 font-bold uppercase">Waste Type</th>
+                                    <th class="p-2 font-bold uppercase">The Process</th>
+                                    <th class="p-2 font-bold uppercase">End Product</th>
+                                    <th class="p-2 font-bold uppercase">Who Gets It?</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-600">
+                                <tr>
+                                    <td class="p-2 font-bold text-red-600">Non-Recyclable Plastic</td>
+                                    <td class="p-2">Chemical transformation</td>
+                                    <td class="p-2 text-blue-600 font-bold">Eco-Fuel / Energy</td>
+                                    <td class="p-2">The community</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-bold text-blue-600">Recyclable Plastic</td>
+                                    <td class="p-2">Sorting and compacting</td>
+                                    <td class="p-2 font-bold text-gray-800">Raw material</td>
+                                    <td class="p-2">Partnered Units</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-bold text-green-600">Organic Waste</td>
+                                    <td class="p-2">Bio-methanation</td>
+                                    <td class="p-2 text-green-600 font-bold">Bio-Fertilizers</td>
+                                    <td class="p-2">Farmers & Gardeners</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="target" class="w-4 h-4 text-indigo-600"></i> The Mission</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                Mission is to permanently delete the concept of waste by transforming everyday trash into a high-value, closed-loop community engine. We collect mixed waste from homes and businesses and instantly split it into three revolutionary pathways.
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i> An Untapped Superpower</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                Trash isn't a problem—it’s an untapped superpower. We’re completely tearing down the old "throwaway" culture and building a radical, zero-waste revolution. We take your everyday waste and engineer it into pure value.
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer p-5" onclick="toggleSlab(this)">
+                        <div class="flex flex-col">
+                            <h4 class="text-sm font-black uppercase text-gray-800 mb-2 flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4 text-cyan-600"></i> The Ultimate Eco-Upgrade</h4>
+                            <div class="slab-content text-sm text-gray-600 leading-relaxed">
+                                Welcome to the ultimate eco-upgrade. We’re turning the waste management world completely upside down. Imagine handing over your weekly trash and getting clean fuel, premium bio-fertilizers, and high-quality farming kits in return.
+                            </div>
+                            <div class="text-center mt-3 text-[10px] text-green-600 font-mono slab-indicator">Tap to expand ↓</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-milestones" class="space-y-6 hidden">
+                    <div class="bg-white border border-gray-200 p-6 rounded-xl shadow-sm text-center">
+                        <span class="text-[11px] font-mono uppercase tracking-widest text-gray-500 block mb-4">Master Progression Map</span>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end font-mono">
+                                <span class="text-gray-800 text-sm font-bold"><a href="https://youtube.com" class="hover:underline">Initial Phase: START</a></span>
+                                <span class="text-green-600 font-black text-2xl">1%</span>
+                            </div>
+                            <div class="w-full h-4 bg-gray-100 border border-gray-200 rounded-full overflow-hidden shadow-inner relative">
+                                <div class="h-full bg-green-500 transition-all duration-1000 ease-out absolute left-0 top-0" style="width: 1%"></div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-gray-500 mt-6 italic">"The journey to zero-waste begins with a single loop."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-media" class="space-y-6 hidden">
+                <div class="grid grid-cols-3 gap-2 bg-gray-100 p-1.5 rounded-xl border border-gray-200">
+                    <button onclick="switchMediaFilter('img')" id="flt-media-img" class="bg-white text-green-600 shadow-sm border border-gray-200 text-[11px] font-mono py-2 rounded-lg font-bold uppercase transition-all">Images</button>
+                    <button onclick="switchMediaFilter('vid')" id="flt-media-vid" class="text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all">Videos/Audios</button>
+                    <button onclick="switchMediaFilter('oth')" id="flt-media-oth" class="text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all">Others</button>
+                </div>
+                
+                <p class="text-[10px] text-gray-500 font-mono text-center px-4">Files are restricted. Admin clearance required to bypass locks.</p>
+
+                <div id="mediaGrid" class="grid grid-cols-2 gap-3"></div>
+            </div>
+
+            <div id="view-about" class="space-y-8 hidden">
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                    <h3 class="text-sm font-black uppercase tracking-widest text-green-700 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Patrons Directors</h3>
+                    <button onclick="addTeamMember()" id="addMemberBtn" class="hidden bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 font-mono text-[10px] px-3 py-1 rounded transition-all font-bold">+ ADD NODE</button>
+                </div>
+
+                <div id="teamContainer" class="space-y-4"></div>
+
+                <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl relative mt-8">
+                    <div class="relative z-10 flex items-center justify-between mb-4">
+                        <h3 class="text-xs font-mono uppercase tracking-widest text-gray-800 font-bold">Message us</h3>
+                        <button onclick="changeRelayEmail()" id="editRelayBtn" class="hidden text-gray-500 hover:text-gray-800 text-[9px] font-mono uppercase bg-white px-2 py-1 rounded border border-gray-300">Edit Routing</button>
+                    </div>
+                    
+                    <form onsubmit="sendComms(event)" class="relative z-10 space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-mono uppercase text-gray-500 mb-1">Target</label>
+                            <input type="text" id="targetEmailDisplay" readonly class="w-full bg-white border border-gray-300 rounded-lg p-2 text-xs font-mono text-gray-800 focus:outline-none" value="patron@outlook.com">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-mono uppercase text-gray-500 mb-1">Message</label>
+                            <textarea id="commsMsg" required rows="4" class="w-full bg-white border border-gray-300 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors p-3 text-xs rounded-lg text-gray-800 resize-none placeholder:text-gray-400" placeholder="Enter message parameters..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-black tracking-widest text-[11px] py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md">
+                            <i data-lucide="send" class="w-4 h-4"></i><span>DISPATCH</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <nav id="appNavBar" class="absolute bottom-0 left-0 right-0 h-20 bg-white/95 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-2 z-40 hidden pb-2">
+            <button onclick="toggleCurtain(false)" class="flex flex-col items-center gap-1 text-gray-500 hover:text-green-600 transition-colors w-16">
+                <i data-lucide="home" class="w-5 h-5"></i><span class="text-[9px] font-mono font-bold tracking-widest">HOME</span>
+            </button>
+            <button onclick="switchMainView('report')" id="nav-report" class="nav-item flex flex-col items-center gap-1 text-green-600 w-16 transition-colors">
+                <i data-lucide="file-bar-chart-2" class="w-5 h-5"></i><span class="text-[9px] font-mono font-bold tracking-widest">REPORT</span>
+            </button>
+            <button onclick="switchMainView('media')" id="nav-media" class="nav-item flex flex-col items-center gap-1 text-gray-500 hover:text-green-600 w-16 transition-colors">
+                <i data-lucide="clapperboard" class="w-5 h-5"></i><span class="text-[9px] font-mono font-bold tracking-widest">MEDIA</span>
+            </button>
+            <button onclick="switchMainView('about')" id="nav-about" class="nav-item flex flex-col items-center gap-1 text-gray-500 hover:text-green-600 w-16 transition-colors">
+                <i data-lucide="users" class="w-5 h-5"></i><span class="text-[9px] font-mono font-bold tracking-widest">ABOUT</span>
+            </button>
+        </nav>
+
+        <div id="securityModal" class="absolute inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="bg-white border border-gray-200 p-6 rounded-2xl w-72 text-center space-y-5 shadow-2xl scale-95 transition-transform duration-300" id="securityBox">
+                <div class="mx-auto w-12 h-12 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-red-600"><i data-lucide="lock" class="w-6 h-6"></i></div>
+                <div>
+                    <h4 class="text-sm font-black uppercase tracking-wider text-gray-900">Admin Bypass Protocol</h4>
+                    <p class="text-[10px] text-gray-500 font-mono mt-1">Enter 4-digit verification pattern</p>
+                </div>
+                <input type="password" id="adminPinInput" maxlength="4" class="w-full text-center tracking-[1em] text-lg font-mono bg-gray-50 border border-gray-300 rounded-lg py-3 text-gray-900 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="••••">
+                <div class="flex space-x-2 text-[11px] font-mono font-bold">
+                    <button onclick="closeSecurityModal()" class="w-1/2 bg-gray-100 py-2.5 rounded-lg text-gray-600 hover:bg-gray-200 uppercase transition-colors">Abort</button>
+                    <button onclick="verifyPin()" class="w-1/2 bg-green-600 py-2.5 rounded-lg text-white hover:bg-green-700 uppercase transition-colors">Verify</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="lightbox" class="hidden fixed inset-0 z-[200] bg-gray-900/95 backdrop-blur-lg flex flex-col justify-center items-center p-4">
+            <button onclick="closeLightbox()" class="absolute top-6 right-6 bg-white/10 hover:bg-red-500 border border-white/20 text-white p-2.5 rounded-full transition-colors z-10 shadow-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div id="lightboxContent" class="w-full max-w-md max-h-[70vh] flex items-center justify-center relative shadow-2xl"></div>
+            <p id="lightboxTitle" class="text-sm font-mono text-white mt-6 tracking-wider text-center font-bold px-4"></p>
+            <a id="lightboxDownloadBtn" target="_blank" download class="mt-4 bg-white border border-gray-200 text-gray-900 hover:bg-gray-50 px-6 py-2.5 text-xs font-mono font-bold tracking-widest uppercase rounded-xl flex items-center gap-2 cursor-pointer transition-all">
+                <i data-lucide="download" class="w-4 h-4"></i> Download File
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // ------------------ GLOBAL STATE ------------------
+        let isAdmin = false;
+        const ADMIN_PIN = "7319";
+        let activeMediaCategory = 'img';
+        let pendingMediaAction = null; 
+
+        // ------------------ HARDCODED EMBEDDED DATA ------------------
+        let mediaData = [
+            { id: 'm1', type: 'img', title: 'Plastic pollution', src: '1.jpg', locked: true },
+            { id: 'm15', type: 'img', title: 'Plastic pollution', src: '11.jpg', locked: true },
+            { id: 'm16', type: 'img', title: 'Plastic pollution', src: '12.jpg', locked: true },
+            { id: 'm17', type: 'img', title: 'Plastic pollution', src: '13.jpg', locked: true },
+            { id: 'm18', type: 'img', title: 'Plastic pollution', src: '14.jpg', locked: true },
+            { id: 'm2', type: 'img', title: 'Plastic pollution', src: '9.jpg', locked: true },
+            { id: 'm3', type: 'img', title: 'Plastic pollution ', src: '2.jpg' , locked: true },
+            { id: 'm5', type: 'img', title: 'Plastic pollution ', src: '10.jpg', locked: true },
+            { id: 'm7', type: 'img', title: 'Plastic pollution', src: '3.jpg' ,locked: true },
+            { id: 'm8', type: 'img', title: 'Plastic pollution ', src: '4.jpg',locked: true },
+            { id: 'm10', type: 'img', title: 'Plastic pollution ', src: '5.jpg',locked: true },
+            { id: 'm11', type: 'img', title: 'Plastic pollution ', src: '6.jpg',locked: true },
+            { id: 'm12', type: 'img', title: 'Plastic pollution ', src: '7.jpg',locked: true },
+            { id: 'm13', type: 'img', title: 'Plastic pollution ', src: '8.jpg',locked: true },
+            { id: 'm9', type: 'vid', title: 'Plastic pollution ', src: '1.mp4',locked: true },
+            { id: 'm14', type: 'vid', title: 'Plastic pollution ', src: '2.mp4',locked: true },
+            { id: 'm6', type: 'oth', title: 'Plastic pollution', src: 'Previous.html', locked: true }
+        ];
+
+        let teamData = [
+            { id: 1, name: "Muhammed", institution: "TTVHSS", age: 17, role: "Founder,all in all" },
+            { id: 2, name: "Sinan", institution: "TTVHSS", age: 14, role: "Founder,all in all" }
+        ];
+
+        let relayEmail = "patron@hotmail.com" ;
+
+        // ------------------ UI NAVIGATION ------------------
+        function toggleCurtain(slideUp) {
+            const curtain = document.getElementById('homeCurtain');
+            const nav = document.getElementById('appNavBar');
+            const header = document.getElementById('appHeader');
+            const viewport = document.getElementById('coreViewport');
+
+            if(slideUp) {
+                curtain.classList.add('curtain-up');
+                setTimeout(() => {
+                    nav.classList.remove('hidden');
+                    header.classList.remove('hidden');
+                    viewport.classList.remove('hidden');
+                    switchMainView('report');
+                }, 400); 
+            } else {
+                curtain.classList.remove('curtain-up');
+                nav.classList.add('hidden');
+                header.classList.add('hidden');
+                viewport.classList.add('hidden');
+            }
+        }
+
+        function switchMainView(viewId) {
+            ['report', 'media', 'about'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.toggle('hidden', v !== viewId);
+                const btn = document.getElementById(`nav-${v}`);
+                if(v === viewId) {
+                    btn.classList.add('text-green-600');
+                    btn.classList.remove('text-gray-500');
+                } else {
+                    btn.classList.remove('text-green-600');
+                    btn.classList.add('text-gray-500');
+                }
+            });
+            document.getElementById('coreViewport').scrollTop = 0;
+            
+            if(viewId === 'media') renderMediaGrid();
+            if(viewId === 'about') renderTeamData();
+        }
+
+        // ------------------ REPORT LOGIC ------------------
+        function switchReportTab(tabId) {
+            ['overview', 'explanations', 'milestones'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabId);
+                const btn = document.getElementById(`btn-report-${t}`);
+                if(t === tabId) {
+                    btn.className = "bg-white text-green-600 shadow-sm border border-gray-200 text-[11px] font-mono py-2 rounded-lg font-bold uppercase transition-all";
+                } else {
+                    btn.className = "text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all";
+                }
+            });
+        }
+
+        function toggleSlab(el) {
+            const content = el.querySelector('.slab-content');
+            const indicator = el.querySelector('.slab-indicator');
+            content.classList.toggle('expanded');
+            if(content.classList.contains('expanded')) {
+                indicator.innerText = "Tap to collapse ↑";
+            } else {
+                indicator.innerText = "Tap to expand ↓";
+            }
+        }
+
+        // ------------------ MEDIA LOGIC ------------------
+        function switchMediaFilter(cat) {
+            activeMediaCategory = cat;
+            ['img', 'vid', 'oth'].forEach(t => {
+                const btn = document.getElementById(`flt-media-${t}`);
+                if(t === cat) {
+                    btn.className = "bg-white text-green-600 shadow-sm border border-gray-200 text-[11px] font-mono py-2 rounded-lg font-bold uppercase transition-all";
+                } else {
+                    btn.className = "text-gray-500 text-[11px] font-mono py-2 rounded-lg font-bold uppercase hover:text-green-600 transition-all";
+                }
+            });
+            renderMediaGrid();
+        }
+
+        function renderMediaGrid() {
+            const grid = document.getElementById('mediaGrid');
+            grid.innerHTML = '';
+            
+            const filtered = mediaData.filter(m => m.type === activeMediaCategory);
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-10 font-mono text-xs text-gray-500 uppercase tracking-widest border border-dashed border-gray-300 rounded-xl bg-white">No Database Records Found</div>`;
+                return;
+            }
+
+            filtered.forEach(asset => {
+                const card = document.createElement('div');
+                card.className = "relative bg-gray-100 rounded-xl overflow-hidden aspect-square border border-gray-200 shadow-sm group select-none flex flex-col justify-end";
+                
+                let visualContent = '';
+                let overlayControls = '';
+
+                if(asset.locked) {
+                    visualContent = `
+                        <div class="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center text-red-600 z-10">
+                            <i data-lucide="lock" class="w-8 h-8 mb-2"></i>
+                            <span class="text-[9px] font-mono tracking-widest uppercase">Admin Lock</span>
+                        </div>`;
+                    
+                    overlayControls = `
+                        <div class="absolute bottom-2 right-2 z-20">
+                            <button onclick="handleMediaAction('${asset.id}', 'unlock')" class="bg-white border border-red-200 text-red-600 p-2 rounded-lg hover:bg-red-50 transition-colors shadow-sm active:scale-95"><i data-lucide="unlock" class="w-4 h-4"></i></button>
+                        </div>`;
+                } else {
+                    if(asset.type === 'vid') {
+                        visualContent = `<video src="${asset.src}" class="absolute inset-0 w-full h-full object-cover" muted loop autoplay></video>`;
+                    } else if(asset.type === 'img') {
+                        visualContent = `<img src="${asset.src}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">`;
+                    } else {
+                        visualContent = `<div class="absolute inset-0 flex items-center justify-center bg-gray-50 text-gray-400"><i data-lucide="file-box" class="w-12 h-12"></i></div>`;
+                    }
+
+                    const openTrigger = `onclick="openLightbox('${asset.src}', '${asset.type}', '${asset.title.replace(/'/g,"\\'")}')"`;
+
+                    overlayControls = `
+                        <div class="absolute inset-0 z-10 cursor-pointer" ${openTrigger}></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent pointer-events-none z-10"></div>
+                        
+                        <div class="absolute top-2 right-2 z-20 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="handleMediaAction('${asset.id}', 'lock')" class="bg-white/90 border border-gray-200 text-gray-700 hover:text-red-600 p-1.5 rounded shadow-sm backdrop-blur-sm"><i data-lucide="lock" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="handleMediaAction('${asset.id}', 'delete')" class="bg-white/90 border border-gray-200 text-gray-700 hover:text-red-600 p-1.5 rounded shadow-sm backdrop-blur-sm"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                            <button ${openTrigger} class="bg-white/90 border border-gray-200 text-gray-700 hover:text-green-600 p-1.5 rounded shadow-sm backdrop-blur-sm"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    ${visualContent}
+                    ${overlayControls}
+                    <div class="relative z-10 p-2 pointer-events-none w-full">
+                        <p class="text-[9px] font-mono text-white truncate w-[80%] drop-shadow-md">${asset.title}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function handleMediaAction(id, action) {
+            if(!isAdmin) {
+                pendingMediaAction = { id, action };
+                triggerAdminLogin();
+                return;
+            }
+            executeMediaAction(id, action);
+        }
+
+        function executeMediaAction(id, action) {
+            const index = mediaData.findIndex(m => m.id === id);
+            if(index === -1) return;
+
+            if(action === 'lock') {
+                mediaData[index].locked = true;
+            } else if(action === 'unlock') {
+                mediaData[index].locked = false;
+            } else if(action === 'delete') {
+                if(confirm("Confirm asset purge from system?")) {
+                    mediaData.splice(index, 1);
+                }
+            }
+            renderMediaGrid();
+        }
+
+        function openLightbox(src, type, title) {
+            const lb = document.getElementById('lightbox');
+            const content = document.getElementById('lightboxContent');
+            const titleEl = document.getElementById('lightboxTitle');
+            const dlBtn = document.getElementById('lightboxDownloadBtn');
+            
+            lb.classList.remove('hidden');
+            titleEl.innerText = title;
+            dlBtn.href = src;
+
+            if(type === 'vid') {
+                content.innerHTML = `<video src="${src}" class="max-w-full max-h-full rounded-xl shadow-xl bg-black" controls autoplay></video>`;
+            } else if (type === 'img') {
+                content.innerHTML = `<img src="${src}" class="max-w-full max-h-full rounded-xl shadow-xl object-contain">`;
+            } else {
+                content.innerHTML = `<div class="bg-white border border-gray-200 p-10 rounded-xl text-center shadow-xl"><i data-lucide="file-box" class="w-16 h-16 text-green-600 mx-auto mb-4"></i><p class="text-xs font-mono text-gray-500">Secure Document Package</p></div>`;
+            }
+            lucide.createIcons();
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.getElementById('lightboxContent').innerHTML = '';
+        }
+
+        // ------------------ ABOUT/TEAM LOGIC ------------------
+        function renderTeamData() {
+            const container = document.getElementById('teamContainer');
+            container.innerHTML = '';
+
+            teamData.forEach(member => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-200 p-4 rounded-xl flex justify-between items-center shadow-sm";
+                card.innerHTML = `
+                    <div class="flex-1 min-w-0 pr-2">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-xs font-bold text-gray-800 truncate">${member.name}</h4>
+                            <span class="text-[9px] font-mono bg-green-50 border border-green-200 text-green-700 px-1.5 rounded-sm">Age ${member.age}</span>
+                        </div>
+                        <p class="text-[10px] font-mono text-green-600 tracking-wider uppercase font-bold truncate mb-0.5">${member.role}</p>
+                        <p class="text-[9px] font-mono text-gray-500 truncate"><i data-lucide="building" class="w-2.5 h-2.5 inline mr-1 -mt-0.5"></i>${member.institution}</p>
+                    </div>
+                    ${isAdmin ? `
+                        <div class="flex flex-col space-y-1 shrink-0 border-l border-gray-200 pl-2">
+                            <button onclick="editTeamMember(${member.id})" class="text-gray-400 hover:text-green-600 bg-gray-50 p-1.5 rounded border border-gray-200"><i data-lucide="edit" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="deleteTeamMember(${member.id})" class="text-gray-400 hover:text-red-600 bg-gray-50 p-1.5 rounded border border-gray-200"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function addTeamMember() {
+            if(!isAdmin) return;
+            const name = prompt("Enter Member Name:");
+            if(!name) return;
+            const age = prompt("Enter Age Metric:");
+            const role = prompt("Enter Role Title:");
+            const institution = prompt("Enter Academic/Professional Institution:");
+            
+            teamData.push({ id: Date.now(), name, age, role, institution });
+            renderTeamData();
+        }
+
+        function editTeamMember(id) {
+            if(!isAdmin) return;
+            const m = teamData.find(x => x.id === id);
+            if(!m) return;
+            const n = prompt("Edit Name:", m.name);
+            if(n) { m.name = n; renderTeamData(); }
+        }
+
+        function deleteTeamMember(id) {
+            if(!isAdmin) return;
+            if(confirm("Remove this operational node?")) {
+                teamData = teamData.filter(x => x.id !== id);
+                renderTeamData();
+            }
+        }
+
+        function changeRelayEmail() {
+            if(!isAdmin) return;
+            const e = prompt("Set new Admin routing email address:", relayEmail);
+            if(e) {
+                relayEmail = e;
+                document.getElementById('targetEmailDisplay').value = relayEmail;
+            }
+        }
+
+        function sendComms(e) {
+            e.preventDefault();
+            const msg = document.getElementById('commsMsg').value;
+            const mailto = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(relayEmail)}&body=${encodeURIComponent(msg)}&su=Message for Patron`;
+            window.open(mailto, '_blank');
+            e.target.reset();
+        }
+
+        // ------------------ ADMIN SECURITY SYSTEM ------------------
+        function triggerAdminLogin() {
+            if(isAdmin) {
+                isAdmin = false;
+                pendingMediaAction = null;
+                updateAdminUI();
+            } else {
+                document.getElementById('securityModal').classList.remove('opacity-0', 'pointer-events-none');
+                document.getElementById('securityBox').classList.remove('scale-95');
+                document.getElementById('adminPinInput').focus();
+            }
+        }
+
+        function closeSecurityModal() {
+            document.getElementById('securityModal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('securityBox').classList.add('scale-95');
+            document.getElementById('adminPinInput').value = '';
+            pendingMediaAction = null;
+        }
+
+        function verifyPin() {
+            const input = document.getElementById('adminPinInput').value;
+            if(input === ADMIN_PIN) {
+                isAdmin = true;
+                closeSecurityModal();
+                updateAdminUI();
+                
+                if(pendingMediaAction) {
+                    executeMediaAction(pendingMediaAction.id, pendingMediaAction.action);
+                    pendingMediaAction = null;
+                }
+            } else {
+                alert("ACCESS DENIED: Pattern Mismatch.");
+                closeSecurityModal();
+            }
+        }
+
+        document.getElementById('adminPinInput').addEventListener('input', (e) => {
+            if(e.target.value.length === 4) verifyPin();
+        });
+
+        function updateAdminUI() {
+            const badgeText = document.getElementById('adminText');
+            const badgeIndicator = document.getElementById('adminIndicator');
+            const badgeOuter = document.getElementById('adminBadge');
+            
+            const addMemBtn = document.getElementById('addMemberBtn');
+            const editRlyBtn = document.getElementById('editRelayBtn');
+
+            if(isAdmin) {
+                badgeText.innerText = "ADMIN ACTIVE";
+                badgeIndicator.className = "w-1.5 h-1.5 rounded-full bg-green-500";
+                badgeOuter.className = "flex items-center space-x-1.5 bg-green-50 border border-green-200 rounded-full px-3 py-1 text-[10px] font-mono tracking-wider text-green-700 cursor-pointer";
+                
+                addMemBtn.classList.remove('hidden');
+                editRlyBtn.classList.remove('hidden');
+            } else {
+                badgeText.innerText = "USER";
+                badgeIndicator.className = "w-1.5 h-1.5 rounded-full bg-gray-400";
+                badgeOuter.className = "flex items-center space-x-1.5 bg-gray-50 border border-gray-200 rounded-full px-3 py-1 text-[10px] font-mono tracking-wider text-gray-500 transition-colors hover:bg-gray-100 cursor-pointer";
+                
+                addMemBtn.classList.add('hidden');
+                editRlyBtn.classList.add('hidden');
+            }
+
+            renderMediaGrid();
+            renderTeamData();
+        }
+    </script>
+</body>
+</html>
