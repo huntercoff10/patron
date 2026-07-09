@@ -292,7 +292,6 @@ function renderTeamData() {
     lucide.createIcons();
 }
 renderTeamData();
-}
 
 
 // ------------------ ADMIN SECURITY SYSTEM ------------------
