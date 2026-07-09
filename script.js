@@ -30,7 +30,7 @@ generateSpace();
 
 // ------------------ GLOBAL STATE ------------------
 let isAdmin = false;
-const ADMIN_PIN = "7319";
+const ADMIN_PIN = "7009";
 let activeMediaCategory = 'img';
 
 let pendingMediaAction = null; // To store action if user tries to interact while locked out
@@ -62,7 +62,7 @@ let teamData = [
     { id: 2, name: "Sinan", institution: "TTVHSS", age: 14, role: "Founder,all in all" }
 ];
 
-let relayEmail = "patron@hotmail.com" ;
+let relayEmail ="Will be available soon" ;
 
 // ------------------ UI NAVIGATION ------------------
 function toggleCurtain(slideUp) {
@@ -291,51 +291,9 @@ function renderTeamData() {
     });
     lucide.createIcons();
 }
-
-function addTeamMember() {
-    if(!isAdmin) return;
-    const name = prompt("Enter Node/Member Name:");
-    if(!name) return;
-    const age = prompt("Enter Age Metric:");
-    const role = prompt("Enter Role Title:");
-    const institution = prompt("Enter Academic/Professional Institution:");
-    
-    teamData.push({ id: Date.now(), name, age, role, institution });
-    renderTeamData();
+renderTeamData();
 }
 
-function editTeamMember(id) {
-    if(!isAdmin) return;
-    const m = teamData.find(x => x.id === id);
-    if(!m) return;
-    const n = prompt("Edit Name:", m.name);
-    if(n) { m.name = n; renderTeamData(); }
-}
-
-function deleteTeamMember(id) {
-    if(!isAdmin) return;
-    if(confirm("Remove this operational node?")) {
-        teamData = teamData.filter(x => x.id !== id);
-        renderTeamData();
-    }
-}
-
-function changeRelayEmail() {
-    if(!isAdmin) return;
-    const e = prompt("Set new Admin routing email address:", relayEmail);
-    if(e) {
-        relayEmail = e;
-        document.getElementById('targetEmailDisplay').value = relayEmail;
-    }
-}
-
-function sendComms(e) {
-    e.preventDefault();
-    const msg = document.getElementById('commsMsg').value;
-    const mailto = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(relayEmail)}&body=${encodeURIComponent(msg)}&su=Message for Patron`;
-    window.open(mailto, '_blank');
-    e.target.reset();
-}
 
 // ------------------ ADMIN SECURITY SYSTEM ------------------
 function triggerAdminLogin() {
