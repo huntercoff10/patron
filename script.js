@@ -30,7 +30,7 @@ generateSpace();
 
 // ------------------ GLOBAL STATE ------------------
 let isAdmin = false;
-const ADMIN_PIN = "7009";
+const ADMIN_PIN = "7029";
 let activeMediaCategory = 'img';
 
 let pendingMediaAction = null; // To store action if user tries to interact while locked out
