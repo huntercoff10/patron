@@ -52,9 +52,10 @@ let mediaData = [
     { id: 'm11', type: 'img', title: 'Plastic pollution ', src: '6.jpg',locked: true },
     { id: 'm12', type: 'img', title: 'Plastic pollution ', src: '7.jpg',locked: true },
     { id: 'm13', type: 'img', title: 'Plastic pollution ', src: '8.jpg',locked: true },
-    { id: 'm9', type: 'vid', title: 'Plastic pollution ', src: '1.mp4',locked: true },
+    { id: 'm9', type: 'oth', title: 'Format,docx ', src: 'NOC Format.docx',locked: true },
     { id: 'm14', type: 'vid', title: 'Plastic pollution ', src: '2.mp4',locked: true },
     { id: 'm6', type: 'oth', title: 'Plastic pollution', src: 'Previous.html', locked: true }
+    
 ];
 
 let teamData = [
